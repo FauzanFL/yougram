@@ -14,13 +14,15 @@ datasource db {
 }
 
 model User {
-  id       Int       @id @default(autoincrement())
-  username String    @unique
-  password String
-  name     String
-  email    String    @unique
-  Post     Post[]
-  Comment  Comment[]
+  id        Int       @id @default(autoincrement())
+  username  String    @unique
+  password  String
+  name      String
+  email     String    @unique
+  Post      Post[]
+  Comment   Comment[]
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
 
   @@map("users")
 }
@@ -32,17 +34,21 @@ model Post {
   user      User      @relation(fields: [userId], references: [id])
   userId    Int
   Comment   Comment[]
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
 
   @@map("posts")
 }
 
 model Comment {
-  id      Int    @id @default(autoincrement())
-  content String
-  user    User   @relation(fields: [userId], references: [id])
-  post    Post   @relation(fields: [postId], references: [id])
-  userId  Int
-  postId  Int
+  id        Int      @id @default(autoincrement())
+  content   String
+  user      User     @relation(fields: [userId], references: [id])
+  post      Post     @relation(fields: [postId], references: [id])
+  userId    Int
+  postId    Int
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 
   @@map("comments")
 }

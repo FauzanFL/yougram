@@ -6,7 +6,10 @@ export const RegisterCard = () => {
     return (
         <>
         <Card className="p-4 w-full md:w-[400px] lg:w-[600px]">
-            <CardHeader className="text-2xl font-bold">Sign Up</CardHeader>
+            <CardHeader className="flex flex-col items-start">
+                <div className="text-2xl font-bold">Sign Up</div>
+                <p className="mt-2 text-sm">Join our community!</p>
+            </CardHeader>
             <CardBody className="">
                 <form>
                     <Input className="mb-2" label="Name" type="text" />

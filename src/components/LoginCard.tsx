@@ -6,7 +6,10 @@ export const LoginCard = () => {
     return (
         <>
         <Card className="p-4 w-full md:w-[400px] lg:w-[600px]">
-            <CardHeader className="text-2xl font-bold">Log In</CardHeader>
+            <CardHeader className="flex flex-col items-start">
+                <div className="text-2xl font-bold">Log In</div>
+                <p className="mt-2 text-sm">Log in to your timeline!</p>
+            </CardHeader>
             <CardBody className="">
                 <form>
                     <Input className="mb-2" label="Username" type="text" />

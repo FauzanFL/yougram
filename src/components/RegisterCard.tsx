@@ -5,7 +5,7 @@ import Link from "next/link"
 export const RegisterCard = () => {
     return (
         <>
-        <Card className="w-full md:w-[400px] lg:w-[600px]">
+        <Card className="p-4 w-full md:w-[400px] lg:w-[600px]">
             <CardHeader className="text-2xl font-bold">Sign Up</CardHeader>
             <CardBody className="">
                 <form>
@@ -20,7 +20,7 @@ export const RegisterCard = () => {
                 </form>
             </CardBody>
             <CardFooter className="text-sm flex justify-center items-center">{"Have an account? "}
-            <Link href={"/"} className="ml-1 text-blue-500 hover:underline">Log In</Link>
+            <Link href={"/login"} className="ml-1 text-blue-500 hover:underline">Log In</Link>
             </CardFooter>
         </Card>
         </>

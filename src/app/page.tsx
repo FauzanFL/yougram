@@ -1,5 +1,3 @@
-import { LoginCard } from "@/components/LoginCard";
-import { RegisterCard } from "@/components/RegisterCard";
 import { WelcomeCard } from "@/components/WelcomeCard";
 
 export default function Home() {

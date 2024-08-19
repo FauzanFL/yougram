@@ -8,7 +8,7 @@ export const RegisterCard = () => {
         <Card className="p-4 w-full md:w-[400px] lg:w-[600px]">
             <CardHeader className="flex flex-col items-start">
                 <div className="text-2xl font-bold">Sign Up</div>
-                <p className="mt-2 text-sm">Join our community!</p>
+                <p className="mt-1 text-sm">Join our community!</p>
             </CardHeader>
             <CardBody className="">
                 <form>

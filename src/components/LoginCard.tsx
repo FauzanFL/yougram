@@ -8,7 +8,7 @@ export const LoginCard = () => {
         <Card className="p-4 w-full md:w-[400px] lg:w-[600px]">
             <CardHeader className="flex flex-col items-start">
                 <div className="text-2xl font-bold">Log In</div>
-                <p className="mt-2 text-sm">Log in to your timeline!</p>
+                <p className="mt-1 text-sm">Log in to your timeline!</p>
             </CardHeader>
             <CardBody className="">
                 <form>

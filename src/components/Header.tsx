@@ -19,19 +19,19 @@ export const Header = () => {
             </NavbarContent>
             <NavbarMenu>
                 <NavbarMenuItem>
-                    <Button variant="light" className="flex justify-start" as={Link}>
+                    <Button href="/home" variant="light" className="flex justify-start" as={Link}>
                         <HomeIcon size={30} className="mr-1"/>
                         Home
                     </Button>
                 </NavbarMenuItem>
                 <NavbarMenuItem>
-                    <Button variant="light" className="flex justify-start" as={Link}>
+                    <Button href="/search" variant="light" className="flex justify-start" as={Link}>
                         <SearchIcon size={30} className="mr-1"/>
                         Search
                     </Button>
                 </NavbarMenuItem>
                 <NavbarMenuItem>
-                    <Button variant="light" className="flex justify-start" as={Link}>
+                    <Button href="/profile" variant="light" className="flex justify-start" as={Link}>
                         <UserCircle size={30} className="mr-1"/>
                         Profile
                     </Button>

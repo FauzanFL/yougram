@@ -2,7 +2,7 @@ import { Header } from "@/components/Header"
 import { SearchSection } from "@/components/SearchSection"
 import { Sidebar } from "@/components/Sidebar"
 
-export function Search () {
+export default function Search () {
     return (
         <>
         <div className="md:flex">

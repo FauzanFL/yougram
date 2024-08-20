@@ -12,7 +12,7 @@ export const Header = () => {
         onMenuOpenChange={setIsMenuOpen}
         className="md:hidden">
             <NavbarContent>
-                <div className="font-bold">YouGram</div>
+                <h1 className="font-bold">YouGram</h1>
             </NavbarContent>
             <NavbarContent justify="end">
                 <NavbarMenuToggle aria-label={isMenuOpen ? "Close menu": "Open menu"} />

@@ -7,8 +7,8 @@ import { Divider } from "@nextui-org/react";
 export default function HomePage() {
     return (
         <div className="md:flex">
-            <Header/>
-            <Sidebar/>
+            <Header page="profile"/>
+            <Sidebar page="profile"/>
             <main className="p-4 flex-grow">
                 <UserProfile/>
                 <h2 className="mt-8 mb-1 mx-2 font-bold">My Posts</h2>

@@ -5,8 +5,8 @@ import { Sidebar } from "@/components/Sidebar";
 export default function HomePage() {
     return (
         <div className="md:flex">
-            <Header/>
-            <Sidebar/>
+            <Header page="home"/>
+            <Sidebar page="home"/>
             <main className="flex-grow">
                 <Post/>
             </main>

@@ -6,8 +6,8 @@ export default function Search () {
     return (
         <>
         <div className="md:flex">
-            <Header/>
-            <Sidebar/>
+            <Header page="search"/>
+            <Sidebar page="search"/>
             <main className="flex-grow">
                 <SearchSection/>
             </main>

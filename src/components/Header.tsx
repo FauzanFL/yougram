@@ -3,7 +3,7 @@ import { Button, Link, Navbar, NavbarBrand, NavbarContent, NavbarMenu, NavbarMen
 import { HomeIcon, SearchIcon, UserCircle } from "lucide-react"
 import { useState } from "react"
 
-export const Header = () => {
+export const Header = ({page}: {page: string}) => {
     const [isMenuOpen, setIsMenuOpen] = useState(false)
     return (
         <Navbar 
@@ -19,19 +19,19 @@ export const Header = () => {
             </NavbarContent>
             <NavbarMenu>
                 <NavbarMenuItem>
-                    <Button href="/home" variant="light" className="flex justify-start" as={Link}>
+                    <Button href="/home" variant={page === 'home'?"flat":"light"} className="flex justify-start" as={Link}>
                         <HomeIcon size={30} className="mr-1"/>
                         Home
                     </Button>
                 </NavbarMenuItem>
                 <NavbarMenuItem>
-                    <Button href="/search" variant="light" className="flex justify-start" as={Link}>
+                    <Button href="/search" variant={page === 'search'?"flat":"light"} className="flex justify-start" as={Link}>
                         <SearchIcon size={30} className="mr-1"/>
                         Search
                     </Button>
                 </NavbarMenuItem>
                 <NavbarMenuItem>
-                    <Button href="/profile" variant="light" className="flex justify-start" as={Link}>
+                    <Button href="/profile" variant={page === 'profile'?"flat":"light"} className="flex justify-start" as={Link}>
                         <UserCircle size={30} className="mr-1"/>
                         Profile
                     </Button>

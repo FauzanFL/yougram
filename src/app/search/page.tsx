@@ -8,7 +8,7 @@ export default function Search () {
         <div className="md:flex">
             <Header/>
             <Sidebar/>
-            <main>
+            <main className="flex-grow">
                 <SearchSection/>
             </main>
         </div>

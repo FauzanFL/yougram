@@ -4,7 +4,7 @@ import { HeartIcon, MessageCircle, UserCircle2 } from "lucide-react"
 export const PostCard = () => {
     return (
         <>
-            <Card className="md:w-[450px] p-2">
+            <Card className="md:max-w-[450px] p-2">
                 <CardHeader className="flex">
                     <UserCircle2 size={20} className="mr-1"/> 
                     <p className="text-sm">username</p>

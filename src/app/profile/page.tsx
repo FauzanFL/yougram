@@ -9,7 +9,7 @@ export default function HomePage() {
         <div className="md:flex">
             <Header/>
             <Sidebar/>
-            <main className="p-4">
+            <main className="p-4 flex-grow">
                 <UserProfile/>
                 <h2 className="mt-8 mb-1 mx-2 font-bold">My Posts</h2>
                 <Divider/>

@@ -7,7 +7,7 @@ export default function HomePage() {
         <div className="md:flex">
             <Header/>
             <Sidebar/>
-            <main>
+            <main className="flex-grow">
                 <Post/>
             </main>
         </div>

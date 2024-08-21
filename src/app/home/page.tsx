@@ -1,3 +1,4 @@
+import { ButtonCreatePost } from "@/components/ButtonCreatePost";
 import { Header } from "@/components/Header";
 import { Post } from "@/components/Post";
 import { Sidebar } from "@/components/Sidebar";
@@ -9,6 +10,9 @@ export default function HomePage() {
             <Sidebar page="home"/>
             <main className="flex-grow">
                 <Post/>
+                <div className="fixed bottom-3 right-3">
+                    <ButtonCreatePost/>
+                </div>
             </main>
         </div>
     )

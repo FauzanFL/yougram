@@ -1,4 +1,4 @@
-import { Card, CardBody, CardFooter, CardHeader, Divider } from "@nextui-org/react"
+import { Card, CardBody, CardFooter, CardHeader, Divider, Link } from "@nextui-org/react"
 import { HeartIcon, MessageCircle, UserCircle2 } from "lucide-react"
 
 export const PostCard = () => {
@@ -7,7 +7,7 @@ export const PostCard = () => {
             <Card className="md:max-w-[450px] p-2">
                 <CardHeader className="flex">
                     <UserCircle2 size={20} className="mr-1"/> 
-                    <p className="text-sm">username</p>
+                    <Link href="/profile" className="text-sm text-black hover:text-blue-500 hover:underline">username</Link>
                 </CardHeader>
                 <Divider/>
                 <CardBody className="py-3">Content</CardBody>

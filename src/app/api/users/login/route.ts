@@ -1,4 +1,6 @@
 import db from "@/lib/db";
+import { setSession } from "@/lib/sessionCookie";
+import { signJwt } from "@/lib/token";
 import { compare } from "bcrypt";
 import { NextRequest, NextResponse } from "next/server";
 
@@ -45,6 +47,9 @@ export const POST = async (req: NextRequest) => {
             status: 400
         })
     }
+
+    const token = signJwt({username: user.username})
+    setSession(token)
 
     return res.json({
         data: {

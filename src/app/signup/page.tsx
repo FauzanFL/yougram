@@ -1,4 +1,9 @@
 import { RegisterCard } from "@/components/RegisterCard";
+import { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "YouGram | Signup"
+}
 
 export default function SignUp() {
     return (

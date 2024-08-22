@@ -3,6 +3,11 @@ import { PostCard } from "@/components/PostCard";
 import { Sidebar } from "@/components/Sidebar";
 import { UserProfile } from "@/components/UserProfile";
 import { Divider } from "@nextui-org/react";
+import { Metadata } from "next";
+
+export const metadata: Metadata = {
+    title: "YouGram | Profile"
+}
 
 export default function HomePage() {
     return (

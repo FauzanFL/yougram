@@ -3,6 +3,11 @@ import { Header } from "@/components/Header";
 import { Post } from "@/components/Post";
 import { Sidebar } from "@/components/Sidebar";
 import db from "@/lib/db";
+import { Metadata } from "next";
+
+export const metadata: Metadata = {
+    title: "YouGram | Home"
+}
 
 export default async function HomePage() {
     const posts = await db.post.findMany({orderBy: {createdAt: "desc"}})

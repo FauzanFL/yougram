@@ -1,6 +1,7 @@
 "use client"
 import { Button, Card, CardBody, CardFooter, CardHeader, Input } from "@nextui-org/react"
 import axios from "axios"
+import { EyeIcon, EyeOffIcon } from "lucide-react"
 import Link from "next/link"
 import { useState } from "react"
 
@@ -12,6 +13,8 @@ export const RegisterCard = () => {
         password: '',
         password2: ''
     })
+    const [isVisible, setIsVisible] = useState(false)
+    const toggleVisible = () => setIsVisible(!isVisible)
 
     const handleSubmit = async (event: any) => {
         event.preventDefault()
@@ -65,8 +68,24 @@ export const RegisterCard = () => {
                     <Input onChange={({target}) => handleChange(target)} className="mb-2" name="name" label="Name" type="text" />
                     <Input onChange={({target}) => handleChange(target)} className="mb-2" name="email" label="Email" type="email" />
                     <Input onChange={({target}) => handleChange(target)} className="mb-2" name="username" label="Username" type="text" />
-                    <Input onChange={({target}) => handleChange(target)} className="mb-2" name="password" label="Password" type="password" />
-                    <Input onChange={({target}) => handleChange(target)} className="mb-2" name="password2" label="Confirm Password" type="password" />
+                    <Input onChange={({target}) => handleChange(target)} className="mb-2" name="password" label="Password" type={isVisible ? "text" : "password"} endContent= {
+                        <button className="focus:outline-none" type="button" onClick={() => setIsVisible(!isVisible)}>
+                            {isVisible ? (
+                                <EyeOffIcon size={25} className="pointer-events-none"/>
+                            ) : (
+                                <EyeIcon size={25} className="pointer-events-none" />
+                            )}
+                        </button>
+                    } />
+                    <Input onChange={({target}) => handleChange(target)} className="mb-2" name="password2" label="Confirm Password" type={isVisible ? "text" : "password"} endContent= {
+                        <button className="focus:outline-none" type="button" onClick={() => setIsVisible(!isVisible)}>
+                            {isVisible ? (
+                                <EyeOffIcon size={25} className="pointer-events-none"/>
+                            ) : (
+                                <EyeIcon size={25} className="pointer-events-none" />
+                            )}
+                        </button>
+                    } />
                     <div className="mt-2 flex justify-center items-center">
                         <Button type="submit" size="md" color="primary">Sign Up</Button>
                     </div>

@@ -1,12 +1,14 @@
 "use client"
-import { Button, Card, CardBody, CardFooter, CardHeader, Input } from "@nextui-org/react"
+import { button, Button, Card, CardBody, CardFooter, CardHeader, Input } from "@nextui-org/react"
 import axios from "axios"
+import { Eye, EyeOff } from "lucide-react"
 import Link from "next/link"
 import { useState } from "react"
 
 export const LoginCard = () => {
     const [username, setUsername] = useState('')
     const [password, setPassword] = useState('')
+    const [isVisible, setIsVisible] = useState(false)
 
     const handleSubmit = async (event: any) => {
         event.preventDefault()
@@ -27,7 +29,15 @@ export const LoginCard = () => {
             <CardBody className="">
                 <form onSubmit={handleSubmit}>
                     <Input onChange={({target})=> setUsername(target.value)} className="mb-2" label="Username" type="text" />
-                    <Input onChange={({target})=> setPassword(target.value)} className="mb-2" label="Password" type="password" />
+                    <Input onChange={({target})=> setPassword(target.value)} className="mb-2" label="Password" type={isVisible ? "text" : "password"} endContent= {
+                        <button className="focus:outline-none" type="button" onClick={() => setIsVisible(!isVisible)}>
+                            {isVisible ? (
+                                <EyeOff size={25} className="pointer-events-none"/>
+                            ) : (
+                                <Eye size={25} className="pointer-events-none" />
+                            )}
+                        </button>
+                    } />
                     <div className="mt-2 flex justify-center items-center">
                         <Button type="submit" size="md" color="primary">Log In</Button>
                     </div>

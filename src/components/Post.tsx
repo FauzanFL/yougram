@@ -5,10 +5,9 @@ export const Post = ({posts}: {posts: any}) => {
         <div className="md:h-[100dvh] overflow-y-auto p-5">
             {!posts || posts.length !== 0 ? (
                 <div className="grid grid-cols-1 lg:grid-cols-2 gap-5">
-                    <PostCard/>
-                    <PostCard/>
-                    <PostCard/>
-                    <PostCard/>
+                    {posts.map((post: any, i:number) => (
+                        <PostCard key={i}/>
+                    ))}
                 </div>
             ): (
                 <div className="text-center">

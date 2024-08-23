@@ -3,17 +3,22 @@ import { button, Button, Card, CardBody, CardFooter, CardHeader, Input } from "@
 import axios from "axios"
 import { Eye, EyeOff } from "lucide-react"
 import Link from "next/link"
+import { useRouter } from "next/navigation"
 import { useState } from "react"
 
 export const LoginCard = () => {
     const [username, setUsername] = useState('')
     const [password, setPassword] = useState('')
     const [isVisible, setIsVisible] = useState(false)
+    const router = useRouter()
 
     const handleSubmit = async (event: any) => {
         event.preventDefault()
         try {
             const res = await axios.post("/api/users/login",{username, password})
+            if (res) {
+                router.push("/home")
+            }
             console.log(res)
         } catch(e) {
             console.error(e)

@@ -1,7 +1,22 @@
+"use client"
+
 import { Button, Card, CardBody, CardFooter, Divider } from "@nextui-org/react"
+import axios from "axios"
 import { StickyNote } from "lucide-react"
+import { useRouter } from "next/navigation"
 
 export const UserProfile = () => {
+    const router = useRouter()
+    const handleLogout = async () => {
+        try {
+            const res = await axios.get("/api/users/logout")
+            if (res.status == 200) {
+                router.push("/login")
+            }
+        } catch(e) {
+            console.error(e)
+        }
+    }
     return (
         <>
             <Card className="p-4 max-w-[400px] mx-auto">
@@ -11,8 +26,9 @@ export const UserProfile = () => {
                         <div className="my-1">Name: <span className="font-semibold">John Doe</span></div>
                         <div className="my-1">Email: <span className="font-semibold">john@gmail.com</span></div>
                     </div>
-                    <div className="flex justify-center items-center">
+                    <div className="flex justify-center items-center gap-3">
                         <Button size="sm" color="primary" variant="solid">Edit profile</Button>
+                        <Button onClick={handleLogout} size="sm" color="danger" variant="solid">Logout</Button>
                     </div>
                 </CardBody>
                 <Divider/>

@@ -11,7 +11,7 @@ export const metadata: Metadata = {
 
 export default function Search () {
     const session = getSession()
-    if (!session) redirect("/home")
+    if (!session) redirect("/login")
     return (
         <>
         <div className="md:flex">

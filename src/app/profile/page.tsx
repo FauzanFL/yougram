@@ -2,14 +2,18 @@ import { Header } from "@/components/Header";
 import { PostCard } from "@/components/PostCard";
 import { Sidebar } from "@/components/Sidebar";
 import { UserProfile } from "@/components/UserProfile";
+import { getSession } from "@/lib/sessionCookie";
 import { Divider } from "@nextui-org/react";
 import { Metadata } from "next";
+import { redirect } from "next/navigation";
 
 export const metadata: Metadata = {
     title: "YouGram | Profile"
 }
 
 export default function Profile() {
+    const session = getSession()
+    if (!session) redirect("/login")
     return (
         <div className="md:flex">
             <Header page="profile"/>

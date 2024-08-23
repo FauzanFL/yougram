@@ -9,7 +9,7 @@ export const metadata: Metadata = {
     title: "YouGram | Profile"
 }
 
-export default function HomePage() {
+export default function Profile() {
     return (
         <div className="md:flex">
             <Header page="profile"/>

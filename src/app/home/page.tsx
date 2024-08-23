@@ -17,8 +17,8 @@ export default async function HomePage() {
     const posts = await db.post.findMany({orderBy: {createdAt: "desc"}, include: {user: true}})
     return (
         <div className="md:flex">
-            <Header page="home"/>
-            <Sidebar page="home"/>
+            <Header page="home" username={session.username}/>
+            <Sidebar page="home" username={session.username}/>
             <main className="flex-grow">
                 <Post posts={posts}/>
                 <div className="fixed bottom-3 right-3">

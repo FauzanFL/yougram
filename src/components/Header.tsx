@@ -3,7 +3,7 @@ import { Button, Link, Navbar, NavbarBrand, NavbarContent, NavbarMenu, NavbarMen
 import { HomeIcon, SearchIcon, UserCircle } from "lucide-react"
 import { useState } from "react"
 
-export const Header = ({page}: {page: string}) => {
+export const Header = ({page, username}: {page: string, username: string}) => {
     const [isMenuOpen, setIsMenuOpen] = useState(false)
     return (
         <Navbar 
@@ -31,7 +31,7 @@ export const Header = ({page}: {page: string}) => {
                     </Button>
                 </NavbarMenuItem>
                 <NavbarMenuItem>
-                    <Button href="/profile" variant={page === 'profile'?"flat":"light"} className="flex justify-start" as={Link}>
+                    <Button href={`/profile/${username}`} variant={page === 'profile'?"flat":"light"} className="flex justify-start" as={Link}>
                         <UserCircle size={30} className="mr-1"/>
                         Profile
                     </Button>

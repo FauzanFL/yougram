@@ -5,7 +5,7 @@ import axios from "axios"
 import { StickyNote } from "lucide-react"
 import { useRouter } from "next/navigation"
 
-export const UserProfile = () => {
+export const UserProfile = ({user}: {user:any}) => {
     const router = useRouter()
     const handleLogout = async () => {
         try {
@@ -22,9 +22,9 @@ export const UserProfile = () => {
             <Card className="p-4 max-w-[400px] mx-auto">
                 <CardBody>
                     <div className="mb-2">
-                        <div className="my-1">Username: <span className="font-semibold">username</span></div>
-                        <div className="my-1">Name: <span className="font-semibold">John Doe</span></div>
-                        <div className="my-1">Email: <span className="font-semibold">john@gmail.com</span></div>
+                        <div className="my-1">Username: <span className="font-semibold">{user.username}</span></div>
+                        <div className="my-1">Name: <span className="font-semibold">{user.name}</span></div>
+                        <div className="my-1">Email: <span className="font-semibold">{user.email}</span></div>
                     </div>
                     <div className="flex justify-center items-center gap-3">
                         <Button size="sm" color="primary" variant="solid">Edit profile</Button>
@@ -33,7 +33,7 @@ export const UserProfile = () => {
                 </CardBody>
                 <Divider/>
                 <CardFooter>
-                    <div className="flex justify-center"><StickyNote className="mr-1" size={25}/><span className="font-semibold">3 posts</span></div>
+                    <div className="flex justify-center"><StickyNote className="mr-1" size={25}/><span className="font-semibold">{`${user.Post.length} posts`}</span></div>
                 </CardFooter>
             </Card>
         </>

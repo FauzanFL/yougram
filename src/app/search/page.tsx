@@ -15,8 +15,8 @@ export default function Search () {
     return (
         <>
         <div className="md:flex">
-            <Header page="search"/>
-            <Sidebar page="search"/>
+            <Header page="search" username={session.username}/>
+            <Sidebar page="search" username={session.username}/>
             <main className="flex-grow">
                 <SearchSection/>
             </main>

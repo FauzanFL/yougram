@@ -14,7 +14,7 @@ export const metadata: Metadata = {
 export default async function HomePage() {
     const session = getSession()
     if (!session) redirect("/login")
-    const posts = await db.post.findMany({orderBy: {createdAt: "desc"}})
+    const posts = await db.post.findMany({orderBy: {createdAt: "desc"}, include: {user: true}})
     return (
         <div className="md:flex">
             <Header page="home"/>

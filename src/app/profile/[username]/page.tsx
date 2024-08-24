@@ -23,19 +23,28 @@ export default async function Profile({params}: {params: {username:string}}) {
     if (!user) {
         redirect("/_not-found")
     }
-    
+
+    const isMyProfile = username === session.username
     return (
         <div className="md:flex">
-            <Header page="profile" username={username}/>
-            <Sidebar page="profile" username={username}/>
-            <main className="p-4 flex-grow">
-                <UserProfile user={user}/>
+            <Header page="profile" username={session.username}/>
+            <Sidebar page="profile" username={session.username}/>
+            <main className="p-4 flex-grow h-[100dvh] overflow-y-auto">
+                <UserProfile user={user} isMyProfile={isMyProfile}/>
                 <h2 className="mt-8 mb-1 mx-2 font-bold">My Posts</h2>
                 <Divider/>
                 <div className="mt-3 grid grid-cols-1 lg:grid-cols-2 gap-2">
-                    {/* <PostCard/>
-                    <PostCard/>
-                    <PostCard/> */}
+                    {user.Post.map((post, i) => {                    
+                        const userPost = {
+                            ...post,
+                            user
+                        }
+                        return (
+                            <>
+                            <PostCard key={i} post={userPost}/>
+                            </>
+                        )
+                    })}
                 </div>
             </main>
         </div>

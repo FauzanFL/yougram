@@ -5,7 +5,7 @@ import axios from "axios"
 import { StickyNote } from "lucide-react"
 import { useRouter } from "next/navigation"
 
-export const UserProfile = ({user}: {user:any}) => {
+export const UserProfile = ({user, isMyProfile}: {user:any, isMyProfile: boolean}) => {
     const router = useRouter()
     const handleLogout = async () => {
         try {
@@ -26,10 +26,12 @@ export const UserProfile = ({user}: {user:any}) => {
                         <div className="my-1">Name: <span className="font-semibold">{user.name}</span></div>
                         <div className="my-1">Email: <span className="font-semibold">{user.email}</span></div>
                     </div>
-                    <div className="flex justify-center items-center gap-3">
-                        <Button size="sm" color="primary" variant="solid">Edit profile</Button>
-                        <Button onClick={handleLogout} size="sm" color="danger" variant="solid">Logout</Button>
-                    </div>
+                    {isMyProfile === true && (
+                        <div className="flex justify-center items-center gap-3">
+                            <Button size="sm" color="primary" variant="solid">Edit profile</Button>
+                            <Button onClick={handleLogout} size="sm" color="danger" variant="solid">Logout</Button>
+                        </div>
+                    )}
                 </CardBody>
                 <Divider/>
                 <CardFooter>

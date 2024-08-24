@@ -36,9 +36,9 @@ export const SearchSection = () => {
                 )}
                 {category === 'post' && (
                     <>
+                    {/* <PostCard/>
                     <PostCard/>
-                    <PostCard/>
-                    <PostCard/>
+                    <PostCard/> */}
                     </>
                 )}
             </div>
@@ -48,9 +48,9 @@ export const SearchSection = () => {
                 <h3 className="font-semibold">Posts</h3>
                 <Divider/>
                 <div className="flex flex-col gap-2 p-2">
+                    {/* <PostCard/>
                     <PostCard/>
-                    <PostCard/>
-                    <PostCard/>
+                    <PostCard/> */}
                 </div>
             </div>
             <div className="p-2">

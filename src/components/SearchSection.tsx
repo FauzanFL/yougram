@@ -52,12 +52,12 @@ export const SearchSection = () => {
                 <Button onClick={() => setCategory('post')} color="primary" size="sm" variant={category === 'post' ? "solid": "ghost"}>Post</Button>
             </div>
             <div className="flex flex-col gap-2 p-2">
-                {category === 'user' && users.length !== 0 &&  users.map((user, i) => {
+                {category === 'user' &&  users.map((user, i) => {
                         return (
-                            <UserCard key={i} />
+                            <UserCard key={i}  user={user}/>
                         )
                 })}
-                {category === 'post' && posts.length !== 0 &&  posts.map((post: Post, i) => {
+                {category === 'post' &&  posts.map((post: Post, i) => {
                     const postUser = {
                         ...post,
                         user: post.user
@@ -73,7 +73,7 @@ export const SearchSection = () => {
                 <h3 className="font-semibold">Posts</h3>
                 <Divider/>
                 <div className="flex flex-col gap-2 p-2">
-                {posts.length !== 0 && posts.map((post: Post, i) => {
+                { posts.map((post: Post, i) => {
                         const postUser = {
                             ...post,
                             user: post.user
@@ -88,9 +88,9 @@ export const SearchSection = () => {
                 <h3 className="font-semibold">Users</h3>
                 <Divider/>
                 <div className="flex flex-col gap-2 p-2">
-                    {users.length !== 0 && users.map((user, i) => {
+                    {users.map((user, i) => {
                         return (
-                            <UserCard key={i} />
+                            <UserCard key={i} user={user} />
                         )
                     })}
                 </div>

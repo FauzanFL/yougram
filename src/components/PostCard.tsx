@@ -1,20 +1,6 @@
+import { Post } from "@/utils/structure"
 import { Card, CardBody, CardFooter, CardHeader, Divider, Link } from "@nextui-org/react"
 import { HeartIcon, MessageCircle, UserCircle2 } from "lucide-react"
-
-interface User {
-    username: string
-    email: string
-}
-
-interface Post {
-    id: number
-    content: string
-    likeCount: number
-    userId: number
-    user: User
-    createdAt: object
-    updatedAt: object
-}
 
 export const PostCard = ({post}: {post: Post}) => {
     return (

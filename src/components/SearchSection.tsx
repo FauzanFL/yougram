@@ -1,20 +1,45 @@
 "use client"
-import { Button, Divider, Input } from "@nextui-org/react"
+import { Button, Divider, Input, user } from "@nextui-org/react"
 import { SearchIcon } from "lucide-react"
 import { useState } from "react"
 import { PostCard } from "./PostCard"
 import { UserCard } from "./UserCard"
+import { Post, User } from "@/utils/structure"
+import axios from "axios"
 
 export const SearchSection = () => {
     const [category, setCategory] = useState('user');
-    const [keyword, setKeyword] = useState('')
+    const [users, setUsers] = useState<User[]>([])
+    const [posts, setPosts] = useState<Post[]>([])
+
+    const handleOnChange = async (keyword: string) => {
+        if (keyword.length > 0) {
+            try {
+                const postRes = await axios.get(`/api/posts/search?keyword=${keyword}`)
+                if (postRes.status == 200) {
+                    setPosts(postRes.data.data)
+                }
+                
+                const userRes = await axios.get(`/api/users/search?keyword=${keyword}`)
+                if (userRes.status == 200) {
+                    setUsers(userRes.data.data)
+                }
+            } catch(e) {
+                console.error(e)
+            }
+        } else {
+            setPosts([])
+            setUsers([])
+        }
+    }
+
     return (
         <>
         <div className="p-2">
             <Input
             className="md:max-w-[400px]"
             type="text"
-            onChange={({target}) => setKeyword(target.value)}
+            onChange={({target}) => handleOnChange(target.value)}
             placeholder="Search..."
             startContent = {
                 <SearchIcon size={25}/>
@@ -27,20 +52,20 @@ export const SearchSection = () => {
                 <Button onClick={() => setCategory('post')} color="primary" size="sm" variant={category === 'post' ? "solid": "ghost"}>Post</Button>
             </div>
             <div className="flex flex-col gap-2 p-2">
-                {category === 'user' && (
-                    <>
-                    <UserCard/>
-                    <UserCard/>
-                    <UserCard/>
-                    </>
-                )}
-                {category === 'post' && (
-                    <>
-                    {/* <PostCard/>
-                    <PostCard/>
-                    <PostCard/> */}
-                    </>
-                )}
+                {category === 'user' && users.length !== 0 &&  users.map((user, i) => {
+                        return (
+                            <UserCard key={i} />
+                        )
+                })}
+                {category === 'post' && posts.length !== 0 &&  posts.map((post: Post, i) => {
+                    const postUser = {
+                        ...post,
+                        user: post.user
+                    }
+                    return (
+                        <PostCard key={i} post={postUser}/>
+                    )
+                })}
             </div>
         </div>
         <div className="hidden md:grid grid-cols-2 gap-3">
@@ -48,18 +73,26 @@ export const SearchSection = () => {
                 <h3 className="font-semibold">Posts</h3>
                 <Divider/>
                 <div className="flex flex-col gap-2 p-2">
-                    {/* <PostCard/>
-                    <PostCard/>
-                    <PostCard/> */}
+                {posts.length !== 0 && posts.map((post: Post, i) => {
+                        const postUser = {
+                            ...post,
+                            user: post.user
+                        }
+                        return (
+                            <PostCard key={i} post={postUser}/>
+                        )
+                    })}
                 </div>
             </div>
             <div className="p-2">
                 <h3 className="font-semibold">Users</h3>
                 <Divider/>
                 <div className="flex flex-col gap-2 p-2">
-                    <UserCard/>
-                    <UserCard/>
-                    <UserCard/>
+                    {users.length !== 0 && users.map((user, i) => {
+                        return (
+                            <UserCard key={i} />
+                        )
+                    })}
                 </div>
             </div>
         </div>

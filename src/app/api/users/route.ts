@@ -1,4 +1,5 @@
 import db from "@/lib/db";
+import { hash } from "bcrypt";
 import { NextRequest, NextResponse } from "next/server";
 
 export const GET = async () => {
@@ -11,7 +12,7 @@ export const GET = async () => {
 }
 
 export const POST = async (req: NextRequest) => {
-    const [name, email, username, password] = await req.json() 
+    const {name, email, username, password} = await req.json() 
     const res = NextResponse
 
     if (!name) {
@@ -51,11 +52,23 @@ export const POST = async (req: NextRequest) => {
         })
     }
 
+    if (!/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[a-zA-Z\d]{8,}$/.test(password)) {
+        return res.json({
+            errors: {
+                message: "password format doesn't match requirement"
+            }
+        }, {
+            status: 400
+        })
+    }
+
+    const hashedPassword = await hashPassword(password)
+
     const data = {
         name,
         email,
         username,
-        password
+        password: hashedPassword
     }
 
     try {
@@ -75,4 +88,9 @@ export const POST = async (req: NextRequest) => {
             status: 500
         })
     }
+}
+
+const hashPassword = async (password: string) => {
+    const hashedPassword = await hash(password, 10)
+    return hashedPassword
 }

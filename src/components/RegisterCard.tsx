@@ -3,6 +3,7 @@ import { Button, Card, CardBody, CardFooter, CardHeader, Input } from "@nextui-o
 import axios from "axios"
 import { EyeIcon, EyeOffIcon } from "lucide-react"
 import Link from "next/link"
+import { useRouter } from "next/navigation"
 import { useState } from "react"
 
 export const RegisterCard = () => {
@@ -14,16 +15,24 @@ export const RegisterCard = () => {
         password2: ''
     })
     const [isVisible, setIsVisible] = useState(false)
+    const router = useRouter()
     const toggleVisible = () => setIsVisible(!isVisible)
 
     const handleSubmit = async (event: any) => {
         event.preventDefault()
-        if (!input.name || !input.email || !input.username || !input.password || input.password2) {
+        if (!input.name || !input.email || !input.username || !input.password || !input.password2) {
             console.log("can't assign empty field")
+            return
+        }
+
+        if (!/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[a-zA-Z\d]{8,}$/.test(input.password)) {
+            console.log("password format doesn't match requirement")
+            return
         }
 
         if (input.password != input.password2) {
             console.log("Password not same")
+            return
         }
 
         const data = {
@@ -35,7 +44,10 @@ export const RegisterCard = () => {
 
         try {
             const res = await axios.post("/api/users", data)
-            console.log(res)
+            if(res.status == 200) {
+                console.log("Register success")
+                router.push("/login")
+            }
         } catch (e) {
             console.error(e)
         }
@@ -51,6 +63,8 @@ export const RegisterCard = () => {
             newInput.username = target.value
         } else if (target.name === "password") {
             newInput.password = target.value
+        } else if (target.name === "password2") {
+            newInput.password2 = target.value
         }
 
         setInput(newInput)
@@ -77,6 +91,14 @@ export const RegisterCard = () => {
                             )}
                         </button>
                     } />
+                    <div className="text-xs mb-2 px-2">
+                        <ol className="ml-4 list-disc">
+                            <li>Min length 8</li>
+                            <li>1 uppercase</li>
+                            <li>1 lowercase</li>
+                            <li>1 number</li>
+                        </ol>
+                    </div>
                     <Input onChange={({target}) => handleChange(target)} className="mb-2" name="password2" label="Confirm Password" type={isVisible ? "text" : "password"} endContent= {
                         <button className="focus:outline-none" type="button" onClick={() => setIsVisible(!isVisible)}>
                             {isVisible ? (

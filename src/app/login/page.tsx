@@ -7,8 +7,8 @@ export const metadata: Metadata = {
   title: "YouGram | Login"
 }
 
-export default function Login() {
-    const session = getSession()
+export default async function Login() {
+    const session = await getSession()
     if (session) redirect("/home")
     return (
     <main className="flex justify-center items-center min-h-[100dvh] p-4">

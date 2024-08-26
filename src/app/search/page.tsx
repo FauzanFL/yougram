@@ -9,8 +9,8 @@ export const metadata: Metadata = {
     title: "YouGram | Search"
 }
 
-export default function Search () {
-    const session = getSession()
+export default async function Search () {
+    const session = await getSession()
     if (!session) redirect("/login")
     return (
         <>

@@ -14,7 +14,7 @@ export const metadata: Metadata = {
 
 export default async function Profile({params}: {params: {username:string}}) {
     const {username} = params
-    const session = getSession()
+    const session = await getSession()
     if (!session) {
         redirect("/login")
     }
@@ -29,7 +29,7 @@ export default async function Profile({params}: {params: {username:string}}) {
         <div className="md:flex">
             <Header page="profile" username={session.username}/>
             <Sidebar page="profile" username={session.username}/>
-            <main className="p-4 flex-grow h-[100dvh] overflow-y-auto">
+            <main className="p-4 flex-grow h-[100dvh] overflow-y">
                 <UserProfile user={user} isMyProfile={isMyProfile}/>
                 <h2 className="mt-8 mb-1 mx-2 font-bold">My Posts</h2>
                 <Divider/>

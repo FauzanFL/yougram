@@ -7,14 +7,14 @@ interface jwtPayload extends JwtPayload {
 }
 
 export const setSession = (data: any) => {
-    const expires = new Date(Date.now() * 12 * 60 * 60 * 1000)
+    const expires = new Date(Date.now() * 12 * 60 * 60)
     cookies().set("session", data, {expires, httpOnly: true})
 }
 
-export const getSession = () => {
+export const getSession = async () => {
     const session = cookies().get("session")?.value
     if (!session) return null
-    const payload = verifyJwt(session)
+    const payload = await verifyJwt(session)
     return payload as jwtPayload
 }
 

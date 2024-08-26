@@ -6,6 +6,6 @@ export const signJwt =(payload: any) => {
     return sign(payload, secret, {expiresIn: "12h"})
 }
 
-export const verifyJwt = (token: string) => {
-    return verify(token, secret)
+export const verifyJwt = async (token: string) => {
+    return await verify(token, secret)
 }

@@ -21,7 +21,7 @@ export const GET = async () => {
 
 export const POST = async (req: NextRequest) => {
     const {content} = await req.json();
-    const payload = getSession();
+    const payload = await getSession();
     if (!payload) {
         return NextResponse.json({
             errors: {

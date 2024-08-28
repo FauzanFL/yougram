@@ -1,16 +1,19 @@
 "use client"
 import { Post } from "@/utils/structure"
-import { Button, Card, CardBody, CardFooter, CardHeader, Divider, Link, Modal, ModalBody, ModalContent, ModalFooter, ModalHeader, Popover, PopoverContent, PopoverTrigger, Textarea, useDisclosure } from "@nextui-org/react"
+import { Button, Card, CardBody, CardFooter, CardHeader, Divider, Input, Link, Modal, ModalBody, ModalContent, ModalFooter, ModalHeader, Popover, PopoverContent, PopoverTrigger, Textarea, useDisclosure } from "@nextui-org/react"
 import axios from "axios"
 import { EllipsisVertical, HeartIcon, MessageCircle, Pencil, Trash2, UserCircle2 } from "lucide-react"
 import { useRouter } from "next/navigation"
 import { useEffect, useState } from "react"
+import { CommentItem } from "./CommentItem"
 
 export const PostCard = ({post, username}: {post: Post, username: string}) => {
     const [isLiked, setIsLiked] = useState(false)
     const [isPopover, setIsPopOver] = useState(false)
     const [content, setContent] = useState(post.content)
+    const [commentContent, setCommentContent] = useState("")
     const {isOpen: isOpenConfirm, onOpen: onOpenConfirm, onOpenChange: onOpenConfirmChange} = useDisclosure()
+    const {isOpen: isCommentOpen, onOpen: onCommentOpen, onOpenChange: onCommentOpenChange} = useDisclosure()
     const {isOpen, onOpen, onOpenChange} = useDisclosure()
     const router = useRouter()
 
@@ -86,6 +89,29 @@ export const PostCard = ({post, username}: {post: Post, username: string}) => {
         }
     }
 
+    const handleAddComment = async () => {
+        if (!commentContent) {
+            console.log("comment can't be empty")
+            return
+        }
+
+        const data = {
+            content: commentContent,
+            postId: post.id
+        }
+        try {
+            const res = await axios.post("/api/comments", data)
+            if (res.status == 200) {
+                console.log(res.data)
+            }
+        } catch(e) {
+            console.error(e)
+        } finally {
+            router.refresh()
+            setCommentContent("")
+        }
+    }
+
     return (
         <>
             <Card className="md:max-w-[450px] p-2">
@@ -129,7 +155,7 @@ export const PostCard = ({post, username}: {post: Post, username: string}) => {
                             <HeartIcon onClick={isLiked ? handleDislike : handleLike} fill={isLiked ? "#ff0000" : "#fff"} color={isLiked ? "#ff0000" : "#000"} className="hover:cursor-pointer" size={25}/>
                             <span className="font-semibold">{post.likeCount}</span>
                         </div>
-                        <MessageCircle className="hover:cursor-pointer" size={25}/>
+                        <MessageCircle onClick={onCommentOpen} className="hover:cursor-pointer" size={25}/>
                     </div>
                 </CardFooter>
             </Card>
@@ -179,6 +205,34 @@ export const PostCard = ({post, username}: {post: Post, username: string}) => {
                             }}>
                             Yes, delete it!
                             </Button>
+                        </ModalFooter>
+                        </>
+                    )}
+                </ModalContent>
+            </Modal>
+            <Modal className="m-0" isOpen={isCommentOpen} onOpenChange={onCommentOpenChange}>
+                <ModalContent>
+                    {(onClose) => (
+                        <>
+                        <ModalHeader className="flex flex-col gap-1">Comments on {post.user.username}'s post</ModalHeader>
+                        <ModalBody>
+                            <div className="max-h-[400px] space-y-2 overflow-y-auto">
+                                <CommentItem/>
+                                <CommentItem/>
+                                <CommentItem/>
+                                <CommentItem/>
+                            </div>
+                        </ModalBody>
+                        <Divider/>
+                        <ModalFooter>
+                            <Input
+                            onChange={({target}) => setCommentContent(target.value)}
+                            value={commentContent}
+                            placeholder="Write comment..."
+                            endContent={
+                                <Button onPress={handleAddComment} size="sm" variant="light" className="text-blue-600">Send</Button>
+                            }
+                            />
                         </ModalFooter>
                         </>
                     )}

@@ -8,12 +8,12 @@ export const DELETE = async (req: Request, {params}: {params: {id: string}}) => 
         if (!post) {
             return NextResponse.json({
                 errors: {
-                    message: "Comment not founf"
+                    message: "Comment not found"
                 }
             }, {status: 404})
         }
 
-        await db.post.delete({where: {id}})
+        await db.comment.delete({where: {id}})
 
         return NextResponse.json({
             data: {

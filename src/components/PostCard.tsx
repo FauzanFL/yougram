@@ -134,51 +134,56 @@ export const PostCard = ({post, username}: {post: Post, username: string}) => {
                 </CardFooter>
             </Card>
             <Modal isOpen={isOpen} onOpenChange={onOpenChange}>
-            <ModalContent>
-                {(onClose) => (
-                    <>
-                    <ModalHeader className="flex flex-col gap-1">Edit Post</ModalHeader>
-                    <ModalBody>
-                        <Textarea
-                        onChange={({target}) => setContent(target.value)}
-                        isRequired
-                        defaultValue={post.content}
-                        placeholder="Write here..."
-                        />
-                    </ModalBody>
-                    <ModalFooter>
-                        <Button color="danger" variant="light" onPress={onClose}>
-                        Close
-                        </Button>
-                        <Button color="primary" onPress={() => handleUpdatePost(onClose)}>
-                        Update
-                        </Button>
-                    </ModalFooter>
-                    </>
-                )}
-            </ModalContent>
-        </Modal>
-        <Modal isOpen={isOpenConfirm} onOpenChange={onOpenConfirmChange}>
-            <ModalContent>
-                {(onClose) => (
-                    <>
-                    <ModalHeader className="font-semibold">Are you sure to delete?</ModalHeader>
-                    <Divider/>
-                    <ModalFooter>
-                        <Button color="danger" onPress={onClose}>
-                        Cancel
-                        </Button>
-                        <Button color="primary" onPress={() => {
-                            handleDeletePost()
-                            onClose()
-                        }}>
-                        Yes, delete it!
-                        </Button>
-                    </ModalFooter>
-                    </>
-                )}
-            </ModalContent>
-        </Modal>
+                <ModalContent>
+                    {(onClose) => (
+                        <>
+                        <ModalHeader className="flex flex-col gap-1">Edit Post</ModalHeader>
+                        <ModalBody>
+                            <Textarea
+                            onChange={({target}) => setContent(target.value)}
+                            isRequired
+                            defaultValue={post.content}
+                            placeholder="Write here..."
+                            />
+                        </ModalBody>
+                        <ModalFooter>
+                            <Button color="danger" variant="light" onPress={onClose}>
+                            Close
+                            </Button>
+                            <Button color="primary" onPress={() => handleUpdatePost(onClose)}>
+                            Update
+                            </Button>
+                        </ModalFooter>
+                        </>
+                    )}
+                </ModalContent>
+            </Modal>
+            <Modal isOpen={isOpenConfirm} onOpenChange={onOpenConfirmChange}>
+                <ModalContent>
+                    {(onClose) => (
+                        <>
+                        <ModalHeader></ModalHeader>
+                        <ModalBody>
+                            <div className="font-semibold text-xl p-2 text-center">
+                            Are you sure to delete?
+                            </div>
+                        </ModalBody>
+                        <Divider/>
+                        <ModalFooter>
+                            <Button color="danger" size="sm" onPress={onClose}>
+                            Cancel
+                            </Button>
+                            <Button color="primary" size="sm" onPress={() => {
+                                handleDeletePost()
+                                onClose()
+                            }}>
+                            Yes, delete it!
+                            </Button>
+                        </ModalFooter>
+                        </>
+                    )}
+                </ModalContent>
+            </Modal>
         </>
     )
 }

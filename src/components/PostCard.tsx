@@ -6,8 +6,9 @@ import { EllipsisVertical, HeartIcon, MessageCircle, Trash2, UserCircle2 } from 
 import { useRouter } from "next/navigation"
 import { useEffect, useState } from "react"
 
-export const PostCard = ({post}: {post: Post}) => {
+export const PostCard = ({post, username}: {post: Post, username: string}) => {
     const [isLiked, setIsLiked] = useState(false)
+    const [isPopover, setIsPopOver] = useState(false)
     const router = useRouter()
 
     useEffect(() => {
@@ -23,6 +24,20 @@ export const PostCard = ({post}: {post: Post}) => {
         }
         checkLike()
     }, [post.id])
+
+    const handleDeletePost = async () => {
+        try {
+            const res = await axios.delete(`/api/posts/${post.id}`)
+            if (res.status == 200) {
+                console.log(res)
+            }
+        } catch(e) {
+            console.error(e)
+        } finally {
+            setIsPopOver(false)
+            router.refresh()
+        }
+    }
     
     const handleLike = async () => {
         try {
@@ -58,17 +73,19 @@ export const PostCard = ({post}: {post: Post}) => {
                         <UserCircle2 size={20} className="mr-1"/> 
                         <Link href="/profile" className="text-sm text-black hover:text-blue-500 hover:underline">{post.user.username}</Link>
                     </div>
-                    <Popover>
-                        <PopoverTrigger className="p-1 rounded-full hover:cursor-pointer hover:bg-slate-200">
-                            <EllipsisVertical size={25} />
-                        </PopoverTrigger>
-                        <PopoverContent>
-                            <Button variant="light" className="text-sm">
-                                <Trash2 size={20} color="#ff0000" />
-                                Delete
-                            </Button>
-                        </PopoverContent>
-                    </Popover>
+                    {username === post.user.username && (
+                        <Popover isOpen={isPopover} onOpenChange={(open) => setIsPopOver(open)}>
+                            <PopoverTrigger className="p-1 rounded-full hover:cursor-pointer hover:bg-slate-200">
+                                <EllipsisVertical size={25} />
+                            </PopoverTrigger>
+                            <PopoverContent>
+                                <Button onPress={ handleDeletePost} variant="light" className="text-sm">
+                                    <Trash2 size={20} color="#ff0000" />
+                                    Delete
+                                </Button>
+                            </PopoverContent>
+                        </Popover>
+                    )}
                 </CardHeader>
                 <Divider/>
                 <CardBody className="py-3">{post.content}</CardBody>

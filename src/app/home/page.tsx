@@ -20,7 +20,7 @@ export default async function HomePage() {
             <Header page="home" username={session.username}/>
             <Sidebar page="home" username={session.username}/>
             <main className="flex-grow">
-                <Post posts={posts}/>
+                <Post posts={posts} username={session.username}/>
                 <div className="fixed bottom-3 right-3">
                     <ButtonCreatePost/>
                 </div>

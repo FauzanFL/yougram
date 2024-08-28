@@ -19,7 +19,7 @@ export default async function Profile({params}: {params: {username:string}}) {
         redirect("/login")
     }
 
-    const user = await db.user.findFirst({where: {username}, include: {Post: true}})
+    const user = await db.user.findFirst({where: {username}, include: {Post: {include: {Comment: {include: {user: true}}, user: true}}}})
     if (!user) {
         redirect("/_not-found")
     }
@@ -29,19 +29,15 @@ export default async function Profile({params}: {params: {username:string}}) {
         <div className="md:flex">
             <Header page="profile" username={session.username}/>
             <Sidebar page="profile" username={session.username}/>
-            <main className="p-4 flex-grow h-[100dvh] overflow-y">
+            <main className="p-4 flex-grow h-[100dvh] overflow-y-auto">
                 <UserProfile user={user} isMyProfile={isMyProfile}/>
                 <h2 className="mt-8 mb-1 mx-2 font-bold">My Posts</h2>
                 <Divider/>
                 <div className="mt-3 grid grid-cols-1 lg:grid-cols-2 gap-2">
-                    {user.Post.map((post, i) => {                    
-                        const userPost = {
-                            ...post,
-                            user
-                        }
+                    {user.Post.map((post, i) => {
                         return (
                             <>
-                            <PostCard key={i} post={userPost} username={session.username}/>
+                            <PostCard key={i} post={post} username={session.username}/>
                             </>
                         )
                     })}

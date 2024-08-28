@@ -1,8 +1,10 @@
-export const CommentItem = () => {
+import { Comment } from "@/utils/structure"
+
+export const CommentItem = ({comment}: {comment: Comment}) => {
     return (
-        <div className="p-2 space-y-1">
-            <div className="font-semibold">username</div>
-            <div className="text-sm">Lorem ipsum dolor sit, amet consectetur adipisicing elit. Illum nemo ut saepe labore magnam rem architecto, modi autem aliquam sit nobis fugiat eius obcaecati iure quibusdam reprehenderit. Possimus, obcaecati iste.</div>
+        <div className="p-2 space-y-1 bg-gray-100 rounded-md">
+            <div className="font-semibold">{comment.user.username}</div>
+            <div className="text-sm">{comment.content}</div>
         </div>
     )
 }

@@ -118,7 +118,7 @@ export const PostCard = ({post, username}: {post: Post, username: string}) => {
                 <CardHeader className="flex justify-between">
                     <div className="flex">
                         <UserCircle2 size={20} className="mr-1"/> 
-                        <Link href="/profile" className="text-sm text-black hover:text-blue-500 hover:underline">{post.user.username}</Link>
+                        <Link href={`/profile/${post.user.username}`} className="text-sm text-black hover:text-blue-500 hover:underline">{post.user.username}</Link>
                     </div>
                     {username === post.user.username && (
                         <Popover isOpen={isPopover} onOpenChange={(open) => setIsPopOver(open)}>
@@ -217,10 +217,15 @@ export const PostCard = ({post, username}: {post: Post, username: string}) => {
                         <ModalHeader className="flex flex-col gap-1">Comments on {post.user.username}'s post</ModalHeader>
                         <ModalBody>
                             <div className="max-h-[400px] space-y-2 overflow-y-auto">
-                                <CommentItem/>
-                                <CommentItem/>
-                                <CommentItem/>
-                                <CommentItem/>
+                                {post.Comment.length != 0 ? (
+                                    post.Comment.map((comment, i) => {
+                                        return (
+                                            <CommentItem comment={comment} key={i}/>
+                                        )
+                                    })
+                                ) : (
+                                    <div className="text-center">No Comments</div>
+                                )}
                             </div>
                         </ModalBody>
                         <Divider/>

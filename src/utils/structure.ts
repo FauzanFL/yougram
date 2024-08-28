@@ -9,6 +9,15 @@ export interface Post {
     likeCount: number
     userId: number
     user: User
+    Comment: Comment[]
     createdAt: object
     updatedAt: object
+}
+
+export interface Comment {
+    id: number
+    content: string
+    user: User
+    userId: number
+    postId: number
 }

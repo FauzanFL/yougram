@@ -2,9 +2,9 @@ import db from "@/lib/db"
 import { getSession } from "@/lib/sessionCookie";
 import { NextRequest, NextResponse } from "next/server"
 
-export const POST = async (req: NextRequest) => {
+export const GET = async (req: NextRequest, {params}: {params: {postId: string}}) => {
     try{
-        const {postId} = await req.json()
+        const postId = parseInt(params.postId)
         const payload = await getSession();
         if (!payload) {
             return NextResponse.json({

@@ -10,13 +10,14 @@ export const PostCard = ({post, username}: {post: Post, username: string}) => {
     const [isLiked, setIsLiked] = useState(false)
     const [isPopover, setIsPopOver] = useState(false)
     const [content, setContent] = useState(post.content)
+    const {isOpen: isOpenConfirm, onOpen: onOpenConfirm, onOpenChange: onOpenConfirmChange} = useDisclosure()
     const {isOpen, onOpen, onOpenChange} = useDisclosure()
     const router = useRouter()
 
     useEffect(() => {
         async function checkLike() {
             try {
-                const res = await axios.post("/api/postliked/isliked", {postId: post.id})
+                const res = await axios.get(`/api/postliked/isliked/${post.id}`)
                 if (res.status == 200) {
                     setIsLiked(res.data.data)
                 }
@@ -100,7 +101,10 @@ export const PostCard = ({post, username}: {post: Post, username: string}) => {
                             </PopoverTrigger>
                             <PopoverContent>
                                 <div className="flex flex-col gap-1">
-                                    <Button onPress={ handleDeletePost} variant="light" className="text-sm flex justify-start">
+                                    <Button onPress={() => {
+                                        onOpenConfirm()
+                                        setIsPopOver(false)
+                                    }} variant="light" className="text-sm flex justify-start">
                                         <Trash2 size={20} color="#ff0000" />
                                         Delete
                                     </Button>
@@ -148,6 +152,27 @@ export const PostCard = ({post, username}: {post: Post, username: string}) => {
                         </Button>
                         <Button color="primary" onPress={() => handleUpdatePost(onClose)}>
                         Update
+                        </Button>
+                    </ModalFooter>
+                    </>
+                )}
+            </ModalContent>
+        </Modal>
+        <Modal isOpen={isOpenConfirm} onOpenChange={onOpenConfirmChange}>
+            <ModalContent>
+                {(onClose) => (
+                    <>
+                    <ModalHeader className="font-semibold">Are you sure to delete?</ModalHeader>
+                    <Divider/>
+                    <ModalFooter>
+                        <Button color="danger" onPress={onClose}>
+                        Cancel
+                        </Button>
+                        <Button color="primary" onPress={() => {
+                            handleDeletePost()
+                            onClose()
+                        }}>
+                        Yes, delete it!
                         </Button>
                     </ModalFooter>
                     </>

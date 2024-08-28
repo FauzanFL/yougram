@@ -1,14 +1,16 @@
 "use client"
 import { Post } from "@/utils/structure"
-import { Button, Card, CardBody, CardFooter, CardHeader, Divider, Link, Popover, PopoverContent, PopoverTrigger } from "@nextui-org/react"
+import { Button, Card, CardBody, CardFooter, CardHeader, Divider, Link, Modal, ModalBody, ModalContent, ModalFooter, ModalHeader, Popover, PopoverContent, PopoverTrigger, Textarea, useDisclosure } from "@nextui-org/react"
 import axios from "axios"
-import { EllipsisVertical, HeartIcon, MessageCircle, Trash2, UserCircle2 } from "lucide-react"
+import { EllipsisVertical, HeartIcon, MessageCircle, Pencil, Trash2, UserCircle2 } from "lucide-react"
 import { useRouter } from "next/navigation"
 import { useEffect, useState } from "react"
 
 export const PostCard = ({post, username}: {post: Post, username: string}) => {
     const [isLiked, setIsLiked] = useState(false)
     const [isPopover, setIsPopOver] = useState(false)
+    const [content, setContent] = useState(post.content)
+    const {isOpen, onOpen, onOpenChange} = useDisclosure()
     const router = useRouter()
 
     useEffect(() => {
@@ -24,6 +26,24 @@ export const PostCard = ({post, username}: {post: Post, username: string}) => {
         }
         checkLike()
     }, [post.id])
+
+    const handleUpdatePost = async (onClose: any) => {
+        if (!content) {
+            console.log("content can't be empty")
+            return
+        }
+        try {
+            const res = await axios.put(`/api/posts/${post.id}`, {content})
+            if (res.status == 200) {
+                console.log(res)
+            }
+        } catch(e) {
+            console.error(e)
+        } finally {
+            onClose()
+            router.refresh()
+        }
+    }
 
     const handleDeletePost = async () => {
         try {
@@ -79,10 +99,19 @@ export const PostCard = ({post, username}: {post: Post, username: string}) => {
                                 <EllipsisVertical size={25} />
                             </PopoverTrigger>
                             <PopoverContent>
-                                <Button onPress={ handleDeletePost} variant="light" className="text-sm">
-                                    <Trash2 size={20} color="#ff0000" />
-                                    Delete
-                                </Button>
+                                <div className="flex flex-col gap-1">
+                                    <Button onPress={ handleDeletePost} variant="light" className="text-sm flex justify-start">
+                                        <Trash2 size={20} color="#ff0000" />
+                                        Delete
+                                    </Button>
+                                    <Button onPress={() => {
+                                        onOpen()
+                                        setIsPopOver(false)
+                                    }} variant="light" className="text-sm flex justify-start">
+                                        <Pencil size={20} color="#ffa500" />
+                                        Edit
+                                    </Button>
+                                </div>
                             </PopoverContent>
                         </Popover>
                     )}
@@ -100,6 +129,31 @@ export const PostCard = ({post, username}: {post: Post, username: string}) => {
                     </div>
                 </CardFooter>
             </Card>
+            <Modal isOpen={isOpen} onOpenChange={onOpenChange}>
+            <ModalContent>
+                {(onClose) => (
+                    <>
+                    <ModalHeader className="flex flex-col gap-1">Edit Post</ModalHeader>
+                    <ModalBody>
+                        <Textarea
+                        onChange={({target}) => setContent(target.value)}
+                        isRequired
+                        defaultValue={post.content}
+                        placeholder="Write here..."
+                        />
+                    </ModalBody>
+                    <ModalFooter>
+                        <Button color="danger" variant="light" onPress={onClose}>
+                        Close
+                        </Button>
+                        <Button color="primary" onPress={() => handleUpdatePost(onClose)}>
+                        Update
+                        </Button>
+                    </ModalFooter>
+                    </>
+                )}
+            </ModalContent>
+        </Modal>
         </>
     )
 }

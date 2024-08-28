@@ -18,7 +18,7 @@ export default async function Search () {
             <Header page="search" username={session.username}/>
             <Sidebar page="search" username={session.username}/>
             <main className="flex-grow">
-                <SearchSection/>
+                <SearchSection username={session.username}/>
             </main>
         </div>
         </>

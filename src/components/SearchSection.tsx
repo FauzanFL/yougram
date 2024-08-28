@@ -7,7 +7,7 @@ import { UserCard } from "./UserCard"
 import { Post, User } from "@/utils/structure"
 import axios from "axios"
 
-export const SearchSection = () => {
+export const SearchSection = ({username}: {username: string}) => {
     const [category, setCategory] = useState('user');
     const [users, setUsers] = useState<User[]>([])
     const [posts, setPosts] = useState<Post[]>([])
@@ -63,7 +63,7 @@ export const SearchSection = () => {
                         user: post.user
                     }
                     return (
-                        <PostCard key={i} post={postUser}/>
+                        <PostCard key={i} post={postUser} username={username}/>
                     )
                 })}
             </div>
@@ -79,7 +79,7 @@ export const SearchSection = () => {
                             user: post.user
                         }
                         return (
-                            <PostCard key={i} post={postUser}/>
+                            <PostCard key={i} post={postUser} username={username}/>
                         )
                     })}
                 </div>

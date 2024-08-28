@@ -41,7 +41,7 @@ export default async function Profile({params}: {params: {username:string}}) {
                         }
                         return (
                             <>
-                            <PostCard key={i} post={userPost}/>
+                            <PostCard key={i} post={userPost} username={session.username}/>
                             </>
                         )
                     })}

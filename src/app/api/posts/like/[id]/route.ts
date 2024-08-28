@@ -24,6 +24,15 @@ export async function GET(request: Request, {params}: {params: {id: string}}) {
             }, {status: 400})
         }
 
+        const postLiked = await db.postLiked.findFirst({where: {userId: user.id, postId: id}})
+        if (postLiked) {
+            return NextResponse.json({
+                errors: {
+                    message: "User has liked the post"
+                }
+            }, {status: 400})
+        }
+
         const post = await db.post.findFirst({where: {id}})
         if (!post) {
             return NextResponse.json({

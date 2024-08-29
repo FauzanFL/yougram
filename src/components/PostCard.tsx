@@ -6,6 +6,7 @@ import { EllipsisVertical, HeartIcon, MessageCircle, Pencil, Trash2, UserCircle2
 import { useRouter } from "next/navigation"
 import { useEffect, useState } from "react"
 import { CommentItem } from "./CommentItem"
+import { toastFailed, toastSuccess } from "@/utils/toaster"
 
 export const PostCard = ({post, username}: {post: Post, username: string}) => {
     const [isLiked, setIsLiked] = useState(false)
@@ -39,10 +40,11 @@ export const PostCard = ({post, username}: {post: Post, username: string}) => {
         try {
             const res = await axios.put(`/api/posts/${post.id}`, {content})
             if (res.status == 200) {
-                console.log(res)
+                toastSuccess("Post updated successfully")
             }
         } catch(e) {
             console.error(e)
+            toastFailed("Failed to update post")
         } finally {
             onClose()
             router.refresh()
@@ -53,10 +55,11 @@ export const PostCard = ({post, username}: {post: Post, username: string}) => {
         try {
             const res = await axios.delete(`/api/posts/${post.id}`)
             if (res.status == 200) {
-                console.log(res)
+                toastSuccess("Post deleted successfully")
             }
         } catch(e) {
             console.error(e)
+            toastFailed("Failed to delete post")
         } finally {
             setIsPopOver(false)
             router.refresh()
@@ -102,10 +105,11 @@ export const PostCard = ({post, username}: {post: Post, username: string}) => {
         try {
             const res = await axios.post("/api/comments", data)
             if (res.status == 200) {
-                console.log(res.data)
+                toastSuccess("Comment added successfully")
             }
         } catch(e) {
             console.error(e)
+            toastFailed("Failed to add comment")
         } finally {
             router.refresh()
             setCommentContent("")

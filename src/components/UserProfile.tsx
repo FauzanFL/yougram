@@ -1,5 +1,6 @@
 "use client"
 
+import { toastFailed, toastSuccess } from "@/utils/toaster"
 import { Button, Card, CardBody, CardFooter, Divider, Input, Modal, ModalBody, ModalContent, ModalFooter, ModalHeader, useDisclosure } from "@nextui-org/react"
 import axios from "axios"
 import { StickyNote } from "lucide-react"
@@ -31,9 +32,11 @@ export const UserProfile = ({user, isMyProfile}: {user:any, isMyProfile: boolean
         try {
             const res = await axios.get("/api/users/logout")
             if (res.status == 200) {
+                toastSuccess("Logout success")
                 router.push("/login")
             }
         } catch(e) {
+            toastFailed("Logout failed")
             console.error(e)
         }
     }
@@ -53,11 +56,13 @@ export const UserProfile = ({user, isMyProfile}: {user:any, isMyProfile: boolean
         try {
             const res = await axios.put("/api/users", data)
             if (res.status == 200) {
-                console.log("Update profile successful")
+                toastSuccess("Update profile successful")
             }
-        } catch(e) {
+        } catch(e: any) {
             console.error(e)
-            console.log("Error")
+            if(e.response.status == 500) {
+                toastFailed("Failed to update profile")
+            }
         } finally {
             onClose()
             router.refresh()

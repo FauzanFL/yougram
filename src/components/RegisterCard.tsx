@@ -1,4 +1,5 @@
 "use client"
+import { toastFailed, toastSuccess } from "@/utils/toaster"
 import { Button, Card, CardBody, CardFooter, CardHeader, Input } from "@nextui-org/react"
 import axios from "axios"
 import { EyeIcon, EyeOffIcon } from "lucide-react"
@@ -45,11 +46,14 @@ export const RegisterCard = () => {
         try {
             const res = await axios.post("/api/users", data)
             if(res.status == 200) {
-                console.log("Register success")
+                toastSuccess("Register succes")
                 router.push("/login")
             }
-        } catch (e) {
+        } catch (e: any) {
             console.error(e)
+            if (e.response.status == 500) {
+                toastFailed("Register failed")
+            }
         }
     }
 

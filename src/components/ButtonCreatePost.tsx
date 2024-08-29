@@ -1,4 +1,5 @@
 "use client"
+import { toastFailed, toastSuccess } from "@/utils/toaster"
 import { Button, Modal, ModalBody, ModalContent, ModalFooter, ModalHeader, Textarea, useDisclosure } from "@nextui-org/react"
 import axios from "axios"
 import { SquarePen } from "lucide-react"
@@ -18,10 +19,13 @@ export const ButtonCreatePost = () => {
         try {
             const res = await axios.post("/api/posts", {content})
             if (res.status == 200) {
-                console.log(res.data.message)
+                toastSuccess("Post created successfully")
             }
-        } catch(e) {
+        } catch(e: any) {
             console.error(e)
+            if(e.response.status == 500) {
+                toastFailed("Failed to create post")
+            }
         } finally {
             setContent("")
             onClose()

@@ -3,15 +3,6 @@ import { getSession } from "@/lib/sessionCookie";
 import { hash } from "bcrypt";
 import { NextRequest, NextResponse } from "next/server";
 
-export const GET = async () => {
-    const users = await db.user.findMany();
-
-    const res = {
-        data: users
-    }
-    return res
-}
-
 export const POST = async (req: NextRequest) => {
     const {name, email, username, password} = await req.json() 
     const res = NextResponse

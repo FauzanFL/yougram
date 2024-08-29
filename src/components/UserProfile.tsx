@@ -1,5 +1,6 @@
 "use client"
 
+import { InputError } from "@/utils/structure"
 import { toastFailed, toastSuccess } from "@/utils/toaster"
 import { Button, Card, CardBody, CardFooter, Divider, Input, Modal, ModalBody, ModalContent, ModalFooter, ModalHeader, useDisclosure } from "@nextui-org/react"
 import axios from "axios"
@@ -7,8 +8,19 @@ import { StickyNote } from "lucide-react"
 import { useRouter } from "next/navigation"
 import { useState } from "react"
 
+type inputErrors = {
+    name: InputError,
+    email: InputError,
+    username: InputError
+}
+
 export const UserProfile = ({user, isMyProfile}: {user:any, isMyProfile: boolean}) => {
     const {isOpen, onOpen, onOpenChange} = useDisclosure()
+    const [errors, setErrors] = useState<inputErrors>({
+        name: {status: false, message: ""},
+        email: {status: false, message: ""},
+        username: {status: false, message: ""}
+    })
     const [input, setInput] = useState({
         name: user.name,
         email: user.email,
@@ -41,31 +53,63 @@ export const UserProfile = ({user, isMyProfile}: {user:any, isMyProfile: boolean
         }
     }
 
-    const handleUpdate = async (onClose: any) => {
-        if (!input.name || !input.email || !input.username) {
-            console.log("can't assign empty field")
-            return
+    const validate = () => {
+        let isError = false
+        const newError = {...errors}
+
+        newError.name.status = false
+        newError.email.status = false
+        newError.username.status = false
+        
+        if (!input.name) {
+            newError.name.status = true
+            newError.name.message = "Name can't be empty"
+            isError = true
+        }
+        if (!input.email) {
+            newError.email.status = true
+            newError.email.message = "Email can't be empty"
+            isError = true
+        }
+        if (!input.username) {
+            newError.username.status = true
+            newError.username.message = "Username can't be empty"
+            isError = true
         }
 
+        setErrors(newError)
+        return isError
+    }
+
+    const handleUpdate = async (onClose: any) => {
         const data = {
             name: input.name,
             email: input.email,
             username: input.username
         }
 
-        try {
-            const res = await axios.put("/api/users", data)
-            if (res.status == 200) {
-                toastSuccess("Update profile successful")
+        const isError = validate()
+        if (!isError) {
+            try {
+                const res = await axios.put("/api/users", data)
+                if (res.status == 200) {
+                    toastSuccess("Update profile successful")
+                }
+                onClose()
+                router.refresh()
+            } catch(e: any) {
+                console.error(e)
+                if (e.response.status == 400 && e.response.data.errors.message == "username has been taken") {
+                    const newError = {...errors}
+                    newError.username.status = true
+                    newError.username.message = "Username has been taken"
+                    setErrors(newError)
+                } else if(e.response.status == 500) {
+                    toastFailed("Failed to update profile")
+                    onClose()
+                    router.refresh()
+                }
             }
-        } catch(e: any) {
-            console.error(e)
-            if(e.response.status == 500) {
-                toastFailed("Failed to update profile")
-            }
-        } finally {
-            onClose()
-            router.refresh()
         }
     }
     return (
@@ -95,9 +139,9 @@ export const UserProfile = ({user, isMyProfile}: {user:any, isMyProfile: boolean
                     <>
                     <ModalHeader className="flex flex-col gap-1">Edit Profile</ModalHeader>
                     <ModalBody>
-                        <Input defaultValue={user.name} onChange={({target}) => handleChange(target)} className="mb-2" name="name" label="Name" type="text" />
-                        <Input defaultValue={user.email} onChange={({target}) => handleChange(target)} className="mb-2" name="email" label="Email" type="email" />
-                        <Input defaultValue={user.username} onChange={({target}) => handleChange(target)} className="mb-2" name="username" label="Username" type="text" />
+                        <Input defaultValue={user.name} onChange={({target}) => handleChange(target)} className="mb-2" name="name" label="Name" type="text" isInvalid={errors.name.status} errorMessage={errors.name.message} />
+                        <Input defaultValue={user.email} onChange={({target}) => handleChange(target)} className="mb-2" name="email" label="Email" type="email" isInvalid={errors.email.status} errorMessage={errors.email.message} />
+                        <Input defaultValue={user.username} onChange={({target}) => handleChange(target)} className="mb-2" name="username" label="Username" type="text" isInvalid={errors.username.status} errorMessage={errors.username.message} />
                     </ModalBody>
                     <ModalFooter>
                         <Button color="danger" variant="light" onPress={onClose}>

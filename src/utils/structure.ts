@@ -21,3 +21,8 @@ export interface Comment {
     userId: number
     postId: number
 }
+
+export interface InputError {
+    status: boolean
+    message: string
+}

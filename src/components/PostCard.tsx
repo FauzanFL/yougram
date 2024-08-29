@@ -1,5 +1,5 @@
 "use client"
-import { Post } from "@/utils/structure"
+import { InputError, Post } from "@/utils/structure"
 import { Button, Card, CardBody, CardFooter, CardHeader, Divider, Input, Link, Modal, ModalBody, ModalContent, ModalFooter, ModalHeader, Popover, PopoverContent, PopoverTrigger, Textarea, useDisclosure } from "@nextui-org/react"
 import axios from "axios"
 import { EllipsisVertical, HeartIcon, MessageCircle, Pencil, Trash2, UserCircle2 } from "lucide-react"
@@ -7,6 +7,11 @@ import { useRouter } from "next/navigation"
 import { useEffect, useState } from "react"
 import { CommentItem } from "./CommentItem"
 import { toastFailed, toastSuccess } from "@/utils/toaster"
+
+type inputErrors = {
+    post: InputError,
+    comment: InputError
+}
 
 export const PostCard = ({post, username}: {post: Post, username: string}) => {
     const [isLiked, setIsLiked] = useState(false)
@@ -16,6 +21,10 @@ export const PostCard = ({post, username}: {post: Post, username: string}) => {
     const {isOpen: isOpenConfirm, onOpen: onOpenConfirm, onOpenChange: onOpenConfirmChange} = useDisclosure()
     const {isOpen: isCommentOpen, onOpen: onCommentOpen, onOpenChange: onCommentOpenChange} = useDisclosure()
     const {isOpen, onOpen, onOpenChange} = useDisclosure()
+    const [error, setError] = useState<inputErrors>({
+        post: {status: false, message: ""},
+        comment: {status: false, message: ""},
+    })
     const router = useRouter()
 
     useEffect(() => {
@@ -32,22 +41,50 @@ export const PostCard = ({post, username}: {post: Post, username: string}) => {
         checkLike()
     }, [post.id])
 
-    const handleUpdatePost = async (onClose: any) => {
-        if (!content) {
-            console.log("content can't be empty")
-            return
+    const validate = (type: "comment" | "post"): boolean => {
+        let isError = false
+        const newError = {...error}
+
+        newError.post.status = false
+        newError.comment.status = false
+
+        switch (type) {
+            case "post":
+                if (!content) {
+                    newError.post.status = true
+                    newError.post.message = "Content can't be empty"
+                    isError = true
+                }
+                break;
+            case "comment":
+                if (!commentContent) {
+                    newError.comment.status = true
+                    newError.comment.message = "Comment can't be empty"
+                    isError = true
+                }
+            default:
+                break;
         }
-        try {
-            const res = await axios.put(`/api/posts/${post.id}`, {content})
-            if (res.status == 200) {
-                toastSuccess("Post updated successfully")
+
+        setError(newError)
+        return isError
+    }
+
+    const handleUpdatePost = async (onClose: any) => {
+        const isError = validate("post")
+        if (!isError) {
+            try {
+                const res = await axios.put(`/api/posts/${post.id}`, {content})
+                if (res.status == 200) {
+                    toastSuccess("Post updated successfully")
+                }
+            } catch(e) {
+                console.error(e)
+                toastFailed("Failed to update post")
+            } finally {
+                onClose()
+                router.refresh()
             }
-        } catch(e) {
-            console.error(e)
-            toastFailed("Failed to update post")
-        } finally {
-            onClose()
-            router.refresh()
         }
     }
 
@@ -93,26 +130,24 @@ export const PostCard = ({post, username}: {post: Post, username: string}) => {
     }
 
     const handleAddComment = async () => {
-        if (!commentContent) {
-            console.log("comment can't be empty")
-            return
-        }
-
         const data = {
             content: commentContent,
             postId: post.id
         }
-        try {
-            const res = await axios.post("/api/comments", data)
-            if (res.status == 200) {
-                toastSuccess("Comment added successfully")
+        const isError = validate("comment")
+        if (!isError) {
+            try {
+                const res = await axios.post("/api/comments", data)
+                if (res.status == 200) {
+                    toastSuccess("Comment added successfully")
+                }
+            } catch(e) {
+                console.error(e)
+                toastFailed("Failed to add comment")
+            } finally {
+                router.refresh()
+                setCommentContent("")
             }
-        } catch(e) {
-            console.error(e)
-            toastFailed("Failed to add comment")
-        } finally {
-            router.refresh()
-            setCommentContent("")
         }
     }
 
@@ -174,6 +209,8 @@ export const PostCard = ({post, username}: {post: Post, username: string}) => {
                             isRequired
                             defaultValue={post.content}
                             placeholder="Write here..."
+                            isInvalid={error.post.status}
+                            errorMessage={error.post.message}
                             />
                         </ModalBody>
                         <ModalFooter>
@@ -238,6 +275,8 @@ export const PostCard = ({post, username}: {post: Post, username: string}) => {
                             onChange={({target}) => setCommentContent(target.value)}
                             value={commentContent}
                             placeholder="Write comment..."
+                            isInvalid={error.comment.status}
+                            errorMessage={error.comment.message}
                             endContent={
                                 <Button onPress={handleAddComment} size="sm" variant="light" className="text-blue-600">Send</Button>
                             }

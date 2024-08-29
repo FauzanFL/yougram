@@ -1,4 +1,5 @@
 "use client"
+import { InputError } from "@/utils/structure"
 import { toastFailed, toastSuccess } from "@/utils/toaster"
 import { Button, Modal, ModalBody, ModalContent, ModalFooter, ModalHeader, Textarea, useDisclosure } from "@nextui-org/react"
 import axios from "axios"
@@ -9,27 +10,39 @@ import { useState } from "react"
 export const ButtonCreatePost = () => {
     const {isOpen, onOpen, onOpenChange} = useDisclosure()
     const [content, setContent] = useState("")
+    const [error, setError] = useState<InputError>({status: false, message: ""})
     const router = useRouter()
 
-    const handleCreate = async (onClose: any) => {
+    const validate = (): boolean => {
+        let isError = false
+        setError({status: false, message: ""})
         if (!content) {
-            console.log("Content can't be empty")
-            return
+            setError({
+                status: true,
+                message: "Content can't be empty"
+            })
+            isError = true
         }
-        try {
-            const res = await axios.post("/api/posts", {content})
-            if (res.status == 200) {
-                toastSuccess("Post created successfully")
+        return isError
+    }
+    const handleCreate = async (onClose: any) => {
+        const isError = validate()
+        if (!isError) {
+            try {
+                const res = await axios.post("/api/posts", {content})
+                if (res.status == 200) {
+                    toastSuccess("Post created successfully")
+                }
+            } catch(e: any) {
+                console.error(e)
+                if(e.response.status == 500) {
+                    toastFailed("Failed to create post")
+                }
+            } finally {
+                setContent("")
+                onClose()
+                router.refresh()
             }
-        } catch(e: any) {
-            console.error(e)
-            if(e.response.status == 500) {
-                toastFailed("Failed to create post")
-            }
-        } finally {
-            setContent("")
-            onClose()
-            router.refresh()
         }
     }
     return (
@@ -45,6 +58,8 @@ export const ButtonCreatePost = () => {
                         onChange={({target}) => setContent(target.value)}
                         isRequired
                         placeholder="Write here..."
+                        isInvalid={error.status}
+                        errorMessage={error.message}
                         />
                     </ModalBody>
                     <ModalFooter>

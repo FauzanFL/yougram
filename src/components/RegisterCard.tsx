@@ -1,4 +1,5 @@
 "use client"
+import { InputError } from "@/utils/structure"
 import { toastFailed, toastSuccess } from "@/utils/toaster"
 import { Button, Card, CardBody, CardFooter, CardHeader, Input } from "@nextui-org/react"
 import axios from "axios"
@@ -6,6 +7,14 @@ import { EyeIcon, EyeOffIcon } from "lucide-react"
 import Link from "next/link"
 import { useRouter } from "next/navigation"
 import { useState } from "react"
+
+type inputErrors = {
+    name: InputError,
+    email: InputError,
+    username: InputError,
+    password: InputError,
+    password2: InputError
+}
 
 export const RegisterCard = () => {
     const [input, setInput] = useState({
@@ -16,25 +25,74 @@ export const RegisterCard = () => {
         password2: ''
     })
     const [isVisible, setIsVisible] = useState(false)
+    const [errors, setErrors] = useState<inputErrors>({
+        name: {status: false, message: ""},
+        email: {status: false, message: ""},
+        username: {status: false, message: ""},
+        password: {status: false, message: ""},
+        password2: {status: false, message: ""},
+    })
     const router = useRouter()
     const toggleVisible = () => setIsVisible(!isVisible)
 
-    const handleSubmit = async (event: any) => {
-        event.preventDefault()
-        if (!input.name || !input.email || !input.username || !input.password || !input.password2) {
-            console.log("can't assign empty field")
-            return
-        }
+    const validate = (): boolean => {
+        let isError = false
+        const newError = {...errors}
+
+        newError.name.status = false
+        newError.email.status = false
+        newError.username.status = false
+        newError.password.status = false
+        newError.password2.status = false
 
         if (!/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[a-zA-Z\d]{8,}$/.test(input.password)) {
-            console.log("password format doesn't match requirement")
-            return
+            newError.password.status = true
+            newError.password2.status = true
+            newError.password.message = "Password format doesn't match requirement"
+            newError.password2.message = "Password format doesn't match requirement"
+            isError = true
         }
 
         if (input.password != input.password2) {
-            console.log("Password not same")
-            return
+            newError.password.status = true
+            newError.password2.status = true
+            newError.password.message = "Password not same"
+            newError.password2.message = "Password not same"
+            isError = true
         }
+        
+        if (!input.name) {
+            newError.name.status = true
+            newError.name.message = "Name can't be empty"
+            isError = true
+        }
+        if (!input.email) {
+            newError.email.status = true
+            newError.email.message = "Email can't be empty"
+            isError = true
+        }
+        if (!input.username) {
+            newError.username.status = true
+            newError.username.message = "Username can't be empty"
+            isError = true
+        }
+        if (!input.password) {
+            newError.password.status = true
+            newError.password.message = "Password can't be empty"
+            isError = true
+        }
+        if (!input.password2) {
+            newError.password2.status = true
+            newError.password2.message = "Confirm password can't be empty"
+            isError = true
+        }
+
+        setErrors(newError)
+        return isError
+    }
+
+    const handleSubmit = async (event: any) => {
+        event.preventDefault()
 
         const data = {
             name: input.name,
@@ -43,18 +101,27 @@ export const RegisterCard = () => {
             password: input.password,
         }
 
-        try {
-            const res = await axios.post("/api/users", data)
-            if(res.status == 200) {
-                toastSuccess("Register succes")
-                router.push("/login")
-            }
-        } catch (e: any) {
-            console.error(e)
-            if (e.response.status == 500) {
-                toastFailed("Register failed")
+        const isError = validate()
+        if (!isError) {
+            try {
+                const res = await axios.post("/api/users", data)
+                if(res.status == 200) {
+                    toastSuccess("Register succes")
+                    router.push("/login")
+                }
+            } catch (e: any) {
+                console.error(e)
+                if (e.response.status == 400 && e.response.data.errors.message == "username has been taken") {
+                    const newError = {...errors}
+                    newError.username.status = true
+                    newError.username.message = "Username has been taken"
+                    setErrors(newError)
+                } else if (e.response.status == 500) {
+                    toastFailed("Register failed")
+                }
             }
         }
+
     }
 
     const handleChange = (target: EventTarget & HTMLInputElement) => {
@@ -83,10 +150,10 @@ export const RegisterCard = () => {
             </CardHeader>
             <CardBody className="">
                 <form onSubmit={handleSubmit}>
-                    <Input onChange={({target}) => handleChange(target)} className="mb-2" name="name" label="Name" type="text" />
-                    <Input onChange={({target}) => handleChange(target)} className="mb-2" name="email" label="Email" type="email" />
-                    <Input onChange={({target}) => handleChange(target)} className="mb-2" name="username" label="Username" type="text" />
-                    <Input onChange={({target}) => handleChange(target)} className="mb-2" name="password" label="Password" type={isVisible ? "text" : "password"} endContent= {
+                    <Input onChange={({target}) => handleChange(target)} className="mb-2" name="name" label="Name" type="text" isInvalid={errors.name.status} errorMessage={errors.name.message} />
+                    <Input onChange={({target}) => handleChange(target)} className="mb-2" name="email" label="Email" type="email" isInvalid={errors.email.status} errorMessage={errors.email.message} />
+                    <Input onChange={({target}) => handleChange(target)} className="mb-2" name="username" label="Username" type="text" isInvalid={errors.username.status} errorMessage={errors.username.message} />
+                    <Input onChange={({target}) => handleChange(target)} className="mb-2" name="password" label="Password" type={isVisible ? "text" : "password"} isInvalid={errors.password.status} errorMessage={errors.password.message} endContent= {
                         <button className="focus:outline-none" type="button" onClick={() => setIsVisible(!isVisible)}>
                             {isVisible ? (
                                 <EyeOffIcon size={25} className="pointer-events-none"/>
@@ -103,7 +170,7 @@ export const RegisterCard = () => {
                             <li>1 number</li>
                         </ol>
                     </div>
-                    <Input onChange={({target}) => handleChange(target)} className="mb-2" name="password2" label="Confirm Password" type={isVisible ? "text" : "password"} endContent= {
+                    <Input onChange={({target}) => handleChange(target)} className="mb-2" name="password2" label="Confirm Password" type={isVisible ? "text" : "password"} isInvalid={errors.password2.status} errorMessage={errors.password2.message} endContent= {
                         <button className="focus:outline-none" type="button" onClick={() => setIsVisible(!isVisible)}>
                             {isVisible ? (
                                 <EyeOffIcon size={25} className="pointer-events-none"/>

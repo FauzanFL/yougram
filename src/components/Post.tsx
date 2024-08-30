@@ -1,6 +1,8 @@
+import db from "@/lib/db"
 import { PostCard } from "./PostCard"
 
-export const Post = ({posts, username}: {posts: any, username: string}) => {
+export const Post = async ({username}: { username: string}) => {
+    const posts = await db.post.findMany({orderBy: {createdAt: "desc"}, include: {user: true, Comment: {include: {user: true}}}})
     return (
         <div className="md:h-[100dvh] overflow-y-auto p-5">
             {!posts || posts.length !== 0 ? (

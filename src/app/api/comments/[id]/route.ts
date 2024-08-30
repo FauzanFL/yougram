@@ -4,8 +4,8 @@ import { NextResponse } from "next/server"
 export const DELETE = async (req: Request, {params}: {params: {id: string}}) => {
     const id = parseInt(params.id)
     try {
-        const post = await db.comment.findUnique({where: {id}})
-        if (!post) {
+        const comment = await db.comment.findUnique({where: {id}})
+        if (!comment) {
             return NextResponse.json({
                 errors: {
                     message: "Comment not found"

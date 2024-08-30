@@ -7,6 +7,7 @@ import { useRouter } from "next/navigation"
 import { useEffect, useState } from "react"
 import { CommentItem } from "./CommentItem"
 import { toastFailed, toastSuccess } from "@/utils/toaster"
+import { PopoverCommentItem } from "./PopoverCommentItem"
 
 type inputErrors = {
     post: InputError,
@@ -260,9 +261,15 @@ export const PostCard = ({post, username}: {post: Post, username: string}) => {
                             <div className="max-h-[400px] space-y-2 overflow-y-auto">
                                 {post.Comment.length != 0 ? (
                                     post.Comment.map((comment, i) => {
-                                        return (
-                                            <CommentItem comment={comment} key={i}/>
-                                        )
+                                        if (username === comment.user.username) {
+                                            return (
+                                                <PopoverCommentItem comment={comment} key={i}/>
+                                            )
+                                        } else {
+                                            return (
+                                                <CommentItem comment={comment} key={i}/>
+                                            )
+                                        }
                                     })
                                 ) : (
                                     <div className="text-center">No Comments</div>

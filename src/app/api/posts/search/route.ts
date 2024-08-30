@@ -14,7 +14,7 @@ export async function GET(req: any) {
     }
     const keyword = keyParam.toString()
     try {
-        const posts = await db.post.findMany({where: {content: {contains: keyword}}, include: {user: true, Comment: {include: {user: true}}}})
+        const posts = await db.post.findMany({where: {content: {contains: keyword}}, include: {user: true, Comment: {include: {user: true}, orderBy: {createdAt: "desc"}}}})
 
         return NextResponse.json({
             data: posts

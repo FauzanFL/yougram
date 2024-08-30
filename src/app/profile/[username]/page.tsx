@@ -19,7 +19,7 @@ export default async function Profile({params}: {params: {username:string}}) {
         redirect("/login")
     }
 
-    const user = await db.user.findFirst({where: {username}, include: {Post: {include: {Comment: {include: {user: true}}, user: true}}}})
+    const user = await db.user.findFirst({where: {username}, include: {Post: {include: {Comment: {include: {user: true}, orderBy: {createdAt: "desc"}}, user: true}}}})
     if (!user) {
         redirect("/_not-found")
     }
